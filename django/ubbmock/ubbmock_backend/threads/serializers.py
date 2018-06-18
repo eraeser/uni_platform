@@ -6,7 +6,7 @@ class ThreadSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Thread
-        fields = ('id', 'name', 'description', 'content', 'author', 'parent_channel',)
+        fields = ('id', 'name', 'description', 'content', 'votes', 'author', 'parent_channel', 'creation_time')
         read_only_fields = ('author', 'parent_channel',)
 
 
@@ -17,4 +17,4 @@ class CreateThreadSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Thread
-        fields = ('id', 'name', 'description', 'content', 'author', 'parent_channel',)
+        fields = ('id', 'name', 'description', 'content', 'author', 'parent_channel', 'creation_time')

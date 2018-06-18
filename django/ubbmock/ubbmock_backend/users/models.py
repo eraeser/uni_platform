@@ -13,8 +13,6 @@ from ..threads.models import Thread
 @python_2_unicode_compatible
 class User(AbstractUser):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    subscribed_channels = models.ManyToManyField(Channel)
-    followed_threads = models.ManyToManyField(Thread)
 
     def __str__(self):
         return self.username

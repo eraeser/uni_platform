@@ -12,11 +12,13 @@ from ..threads.models import Thread
 @python_2_unicode_compatible
 class Comment(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    content = models.CharField(max_length=500)
+    content = models.TextField(max_length=500)
+    votes = models.IntegerField(default=0, blank=True)
     author = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     parent_thread = models.ForeignKey(Thread, on_delete=models.CASCADE)
-    parent_comment = models.ForeignKey('self', on_delete=models.CASCADE, null=True)
-    is_deleted = models.BooleanField(default=False)
+    parent_comment = models.ForeignKey('self', on_delete=models.CASCADE, null=True, blank=True)
+    is_deleted = models.BooleanField(default=False, blank=True)
+    creation_time = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
         return str(self.id) + ' ' + str(self.author) + ' ' + str(self.parent_thread)

@@ -4,10 +4,14 @@ from .models import Comment
 
 class CommentSerializer(serializers.ModelSerializer):
 
+    username = serializers.CharField(source='author.username')
+
     class Meta:
         model = Comment
-        fields = ('id', 'content', 'author', 'parent_thread', 'parent_comment', 'is_deleted',)
-        read_only_fields = ('author', 'parent_thread', 'parent_comment', 'is_deleted',)
+        fields = ('id', 'content', 'author',
+                  'username', 'votes', 'parent_thread',
+                  'parent_comment', 'is_deleted', 'creation_time')
+        read_only_fields = ('author', 'username', 'parent_thread', 'parent_comment', 'is_deleted', 'creation_time')
 
 
 class CreateCommentSerializer(serializers.ModelSerializer):
@@ -17,4 +21,4 @@ class CreateCommentSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Comment
-        fields = ('id', 'content', 'author', 'parent_thread', 'parent_comment',)
+        fields = ('id', 'content', 'author', 'parent_thread', 'parent_comment', 'creation_time')

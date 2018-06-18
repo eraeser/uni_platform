@@ -1,4 +1,5 @@
 from django.conf import settings
+from django.conf.urls import url
 from django.urls import path, re_path, include, reverse_lazy
 from django.conf.urls.static import static
 from django.contrib import admin
@@ -6,26 +7,28 @@ from django.views.generic.base import RedirectView
 from rest_framework.routers import DefaultRouter
 from rest_framework.authtoken import views
 from .users.views import UserViewSet, UserCreateViewSet
-from .channels.views import ChannelViewSet, ChannelCreateViewSet
-from .threads.views import ThreadViewSet, ThreadCreateViewSet
-from .comments.views import CommentViewSet, CommentCreateViewSet
+from .channels.views import ChannelViewSet
+from .threads.views import ThreadViewSet
+from .comments.views import CommentViewSet
+
+from rest_framework_jwt.views import obtain_jwt_token, refresh_jwt_token, verify_jwt_token
 
 router = DefaultRouter()
 router.register(r'users', UserViewSet)
 router.register(r'users', UserCreateViewSet)
 router.register(r'channels', ChannelViewSet)
-router.register(r'channels', ChannelCreateViewSet)
 router.register(r'comments', CommentViewSet)
-router.register(r'comments', CommentCreateViewSet)
 router.register(r'threads', ThreadViewSet)
-router.register(r'threads', ThreadCreateViewSet)
 # router.register(r'dashboard', DashboardViewSet)
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/v1/', include(router.urls)),
-    path('api-token-auth/', views.obtain_auth_token),
+    # path('api-token-auth/', views.obtain_auth_token),
     path('api-auth/', include('rest_framework.urls', namespace='rest_framework')),
+    url(r'^api-token-auth/', obtain_jwt_token),
+    url(r'^api-token-refresh/', refresh_jwt_token),
+    url(r'^api-token-verify/', verify_jwt_token),
 
     # the 'api-root' from django rest-frameworks default router
     # http://www.django-rest-framework.org/api-guide/routers/#defaultrouter

@@ -4,20 +4,22 @@ from rest_framework.decorators import action
 from rest_framework.response import Response
 
 from .models import Thread
-# from .permissions import IsUserOrReadOnly
 from .serializers import CreateThreadSerializer, ThreadSerializer
 from ..comments.serializers import CommentSerializer
 
 
 class ThreadViewSet(mixins.RetrieveModelMixin,
                     mixins.UpdateModelMixin,
+                    mixins.CreateModelMixin,
+                    mixins.DestroyModelMixin,
+                    mixins.ListModelMixin,
                     viewsets.GenericViewSet):
     """
     Updates and retrives channels
     """
     queryset = Thread.objects.all()
     serializer_class = ThreadSerializer
-    # permission_classes = (IsUserOrReadOnly,)
+    permission_classes = (AllowAny,)
 
     @action(methods=['get'], detail=True,
             url_path='comments', url_name='comments')
@@ -26,13 +28,8 @@ class ThreadViewSet(mixins.RetrieveModelMixin,
         comments = thread.comment_set.all()
         return Response([CommentSerializer(comment).data for comment in comments])
 
+    def get_serializer_class(self):
+        if self.action == 'create':
+            return CreateThreadSerializer
 
-class ThreadCreateViewSet(mixins.CreateModelMixin,
-                          mixins.ListModelMixin,
-                          viewsets.GenericViewSet):
-    """
-    Creates channels
-    """
-    queryset = Thread.objects.all()
-    serializer_class = CreateThreadSerializer
-    permission_classes = (AllowAny,)
+        return super().get_serializer_class()

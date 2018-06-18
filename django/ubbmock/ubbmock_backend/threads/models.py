@@ -12,11 +12,14 @@ from ..channels.models import Channel
 @python_2_unicode_compatible
 class Thread(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    creation_time = models.DateTimeField(auto_now_add=True)
     name = models.CharField(max_length=50)
-    description = models.CharField(max_length=255)
-    content = models.CharField(max_length=1420)
+    description = models.CharField(max_length=255, blank=True)
+    content = models.TextField(max_length=1500)
+    votes = models.IntegerField(default=0)
     author = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     parent_channel = models.ForeignKey(Channel, on_delete=models.CASCADE)
+    users_set = models.ManyToManyField(settings.AUTH_USER_MODEL, related_name='followed_threads', blank=True)
 
     def __str__(self):
         return str(self.name) + ' ' + str(self.author) + ' ' + str(self.parent_channel)

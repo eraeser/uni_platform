@@ -12,7 +12,9 @@ from rest_framework.authtoken.models import Token
 class Channel(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     name = models.CharField(max_length=50)
-    description = models.CharField(max_length=255)
+    description = models.CharField(max_length=255, blank=True)
+    users_set = models.ManyToManyField(settings.AUTH_USER_MODEL, related_name='subscribed_channels', blank=True)
+    creation_time = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
         return str(self.name)
