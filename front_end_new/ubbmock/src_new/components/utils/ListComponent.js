@@ -8,7 +8,7 @@ import {
   FlatList,
 } from 'react-native';
 
-class MyListItem extends React.PureComponent {
+class DefaultItem extends React.PureComponent {
   _onPress = () => {
     this.props.onPressItem(this.props.id);
   };
@@ -18,7 +18,7 @@ class MyListItem extends React.PureComponent {
       <TouchableOpacity onPress={this._onPress}>
         <View>
           <Text>
-            {this.props.title}
+            {this.props.item.name}
           </Text>
         </View>
       </TouchableOpacity>
@@ -33,18 +33,22 @@ export default class ListComponent extends React.PureComponent {
     console.log(id);
   };
 
-  _renderItem = ({item}) => (
-    <MyListItem
-      id={item.id}
-      onPressItem={this.props.onPressItem || this._onPressItem}
-      selected={!!this.state.selected.get(item.id)}
-      title={item.title}
-    />
-  );
+  _renderItem = ({item}) => {
+    const Item = this.props.itemModel || DefaultItem;
+    return (
+      <Item
+        id={item.id}
+        onPressItem={this.props.onPressItem || this._onPressItem}
+        item={item}
+      />);
+  };
 
   render() {
     return (
       <FlatList
+        ItemSeparatorComponent={() => (
+          <View style={{marginBottom: 10}} />
+        )}
         data={this.props.data}
         keyExtractor={this._keyExtractor}
         renderItem={this._renderItem}

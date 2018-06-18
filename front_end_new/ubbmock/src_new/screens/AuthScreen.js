@@ -4,12 +4,13 @@ import {
     Text,
     TextInput,
     View,
+    ActivityIndicator,
     Button,
 } from 'react-native';
 import { connect } from "react-redux";
 
 
-import { logInUser } from '../business/user';
+import { logInUserAsync } from '../business/user';
 import { updateTokenThunk, setUserThunk } from '../state/actions/users';
 
 export class AuthScreen extends React.Component {
@@ -19,7 +20,16 @@ export class AuthScreen extends React.Component {
     this.state = {
       username: null,
       password: null,
+      isFetching: false,
     }
+  }
+
+  fetchUser = async () => {
+    this.setState({isFetching: true});
+    const {token, user} = await logInUserAsync({username: this.state.username, password: this.state.password});
+    this.props.dispatch(updateTokenThunk(token))
+    .then(() => this.props.dispatch(setUserThunk(user))
+    .then(() => this.setState({isFetching: false})));
   }
 
   render() {
@@ -47,14 +57,14 @@ export class AuthScreen extends React.Component {
             secureTextEntry
           />
           <View style={{margin:7}} />
-          <Button
-            onPress={async () => {
-              const {token, user} = await logInUser({username: this.state.username, password: this.state.password});
-              this.props.dispatch(updateTokenThunk(token));
-              this.props.dispatch(setUserThunk(user))
-            }}
-            title="Submit"
-          />
+
+          {this.state.isFetching ? (
+            <View>
+              <ActivityIndicator size="large" color="#0000ff" />
+            </View>
+          ) : (
+            <Button onPress={this.fetchUser} title="Submit" />
+          )}
         </ScrollView>
           )
   }

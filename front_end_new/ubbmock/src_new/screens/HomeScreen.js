@@ -8,13 +8,7 @@ import {
 } from 'react-native';
 import { connect } from "react-redux";
 
-import { updateTokenThunk } from '../state/actions/users';
-
 class HomeScreen extends React.Component {
-  _onLogoutPress = () => {
-    this.props.dispatch(updateTokenThunk(''));
-  }
-
   render() {
     return (
       <ScrollView style={{padding: 20}}>
@@ -23,11 +17,6 @@ class HomeScreen extends React.Component {
         >
           {`Welcome ${this.props.user.full_name}`}
         </Text>
-        <View style={{margin:20}} />
-        <Button
-          onPress={this._onLogoutPress}
-          title="Logout"
-        />
       </ScrollView>)
   }
 }
