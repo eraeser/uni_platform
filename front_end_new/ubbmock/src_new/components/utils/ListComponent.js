@@ -27,11 +27,21 @@ class DefaultItem extends React.PureComponent {
 }
 
 export default class ListComponent extends React.PureComponent {
+
+  state = {
+    refreshing: false,
+  }
+
   _keyExtractor = (item, index) => item.id;
 
   _onPressItem = id => {
     console.log(id);
   };
+
+  _onRefresh = () => {
+    this.setState({refreshing: true})
+    this.props.onRefresh().then(() => this.setState({refreshing: false}))
+  }
 
   _renderItem = ({item}) => {
     const Item = this.props.itemModel || DefaultItem;
@@ -52,6 +62,9 @@ export default class ListComponent extends React.PureComponent {
         data={this.props.data}
         keyExtractor={this._keyExtractor}
         renderItem={this._renderItem}
+        refreshing={this.state.refreshing}
+        onRefresh={this._onRefresh}
+        ListFooterComponent={() => <View style={{height: 100}} />}
       />
     );
   }

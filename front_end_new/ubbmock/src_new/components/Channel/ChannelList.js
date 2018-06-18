@@ -56,6 +56,7 @@ const ChannelList = type => class CustomList extends React.Component {
             onPressItem={item => {
               this.props.navigation.navigate('Channel', {item: item});
             }}
+            onRefresh={this._loadDataAsync}
           />
       )}
       </View>)

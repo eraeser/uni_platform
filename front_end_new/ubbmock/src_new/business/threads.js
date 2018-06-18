@@ -134,8 +134,38 @@ async function getChannelThreadsAsync(channel_id) {
       let responseJson = await response.json();
       return responseJson;
     }
+    throw new Error('Network response was not ok.');
   } catch (error) {
-    console.error(error);
+    ToastAndroid.show(error.toString(), ToastAndroid.LONG);
+    // console.error(error);
+    return [];
+  }
+}
+
+async function getDashboardAsync(token) {
+  try {
+    let response = await fetch(
+      `${HOST}:${PORT}/${API}/users/me/dashboard/`, {
+        method: 'GET',
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'application/json',
+          'Access-Control-Allow-Origin': 'true',
+          'Access-Control-Allow-Credentials': 'true',
+          Authorization: `${AUTH_PREFIX} ${token}`,
+        },
+      }
+    );
+    console.log(response);
+    if(response.ok){
+      let responseJson = await response.json();
+      return responseJson;
+    }
+    throw new Error('Network response was not ok.');
+  } catch (error) {
+    ToastAndroid.show(error.toString(), ToastAndroid.LONG);
+    // console.error(error);
+    return [];
   }
 }
 
@@ -161,6 +191,7 @@ async function getThreadAsync(thread_id) {
   } catch (error) {
     ToastAndroid.show(error.toString(), ToastAndroid.LONG);
     // console.error(error);
+    return {}
   }
 }
 
@@ -170,4 +201,5 @@ export {
   updateThreadAsync,
   deleteThreadAsync,
   getThreadAsync,
+  getDashboardAsync,
 }

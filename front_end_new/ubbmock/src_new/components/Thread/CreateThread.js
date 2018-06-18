@@ -5,6 +5,7 @@ import {
   Text,
   Button,
   ScrollView,
+  ToastAndroid,
 } from 'react-native';
 import { connect } from "react-redux";
 
@@ -54,14 +55,17 @@ class CreateThread extends React.Component {
         />
         <Button
           title="Submit"
-          onPress={() => {
-            postThreadAsync({
+          onPress={async () => {
+            const response = await postThreadAsync({
               name: this.state.nameValue,
               description: this.state.descriptionValue,
               content: this.state.contentValue,
               parent_channel: channel.id,
               author: this.props.currentUser.id,
             },this.props.currentUser.auth_token);
+            response
+            ? this.props.navigation.goBack()
+            : ToastAndroid.show('Could not submit comment', ToastAndroid.LONG);
           }}
         />
         <Markdown>{this.state.contentValue}</Markdown>

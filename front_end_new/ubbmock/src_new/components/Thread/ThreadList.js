@@ -10,6 +10,7 @@ import ThreadItem from './ThreadItem';
 
 import {
   getChannelThreadsAsync,
+  getDashboardAsync,
 } from '../../business/threads';
 
 // MOCK DATA
@@ -26,8 +27,13 @@ class ThreadList extends React.Component {
   }
 
   _loadCacheAsync = async () => {
-    console.log(this.props.channel_id);
-    let data = await getChannelThreadsAsync(this.props.channel_id);
+    let data;
+    if (this.props.channel_id) {
+      console.log(this.props.channel_id);
+      data = await getChannelThreadsAsync(this.props.channel_id);
+    } else if(this.props.dashboard) {
+      data = await getDashboardAsync(this.props.user.auth_token);
+    }
     console.log(data);
     this.setState({data: data});
   };
@@ -55,6 +61,7 @@ class ThreadList extends React.Component {
             onPressItem={item => {
               this.props.navigation.navigate('Thread', {item: item});
             }}
+            onRefresh={this._loadDataAsync}
           />
       )}
       </View>)

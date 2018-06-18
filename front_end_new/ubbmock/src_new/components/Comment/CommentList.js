@@ -56,6 +56,7 @@ class CommentList extends React.Component {
             onPressItem={item => {
               this.props.navigation.navigate('Comment', {item: item});
             }}
+            onRefresh={this._loadDataAsync}
           />
       )}
       </View>)

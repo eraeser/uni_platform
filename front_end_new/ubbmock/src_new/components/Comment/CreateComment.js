@@ -5,6 +5,7 @@ import {
   Text,
   Button,
   ScrollView,
+  ToastAndroid,
 } from 'react-native';
 import { connect } from "react-redux";
 
@@ -45,14 +46,16 @@ class CreateComment extends React.Component {
         />
         <Button
           title="Submit"
-          onPress={() => {
-            console.log({text: this.state.value});
-            postCommentAsync({
+          onPress={async () => {
+            const response = await postCommentAsync({
               content: this.state.value,
               parent_thread: thread.id,
               author: this.props.currentUser.id,
               parent_comment: itemComment.id || null,
             },this.props.currentUser.auth_token);
+            response
+            ? this.props.navigation.goBack()
+            : ToastAndroid.show('Could not submit comment', ToastAndroid.LONG);
           }}
         />
         <Markdown>{this.state.value}</Markdown>

@@ -1,23 +1,23 @@
 import React from 'react';
 import {
-    ScrollView,
     Text,
-    TextInput,
     View,
-    Button,
 } from 'react-native';
 import { connect } from "react-redux";
+
+import { ThreadList } from '../components/Thread';
 
 class HomeScreen extends React.Component {
   render() {
     return (
-      <ScrollView style={{padding: 20}}>
+      <View style={{padding: 20}}>
         <Text
           style={{fontSize: 27}}
         >
           {`Welcome ${this.props.user.full_name}`}
         </Text>
-      </ScrollView>)
+        <ThreadList navigation={this.props.navigation} dashboard />
+      </View>)
   }
 }
 
