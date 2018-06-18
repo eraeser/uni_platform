@@ -17,7 +17,7 @@ class ThreadViewSet(mixins.RetrieveModelMixin,
     """
     Updates and retrives channels
     """
-    queryset = Thread.objects.all()
+    queryset = Thread.objects.all().order_by('-creation_time')
     serializer_class = ThreadSerializer
     permission_classes = (AllowAny,)
 
@@ -25,7 +25,7 @@ class ThreadViewSet(mixins.RetrieveModelMixin,
             url_path='comments', url_name='comments')
     def get_comments(self, request, pk=None):
         thread = self.get_object()
-        comments = thread.comment_set.all()
+        comments = thread.comment_set.all().order_by('-creation_time')
         return Response([CommentSerializer(comment).data for comment in comments])
 
     def get_serializer_class(self):

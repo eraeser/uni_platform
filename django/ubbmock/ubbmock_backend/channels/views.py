@@ -23,7 +23,7 @@ class ChannelViewSet(mixins.RetrieveModelMixin,
             url_path='threads', url_name='threads')
     def get_threads(self, request, pk=None):
         channel = self.get_object()
-        threads = channel.thread_set.all()
+        threads = channel.thread_set.all().order_by('-creation_time')
         return Response([ThreadSerializer(thread).data for thread in threads])
 
     def get_serializer_class(self):

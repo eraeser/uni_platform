@@ -3,6 +3,7 @@ from rest_framework.decorators import action
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
 
+from ..threads.models import Thread
 from .models import User
 from .permissions import IsUserOrReadOnly
 from .serializers import CreateUserSerializer, UserSerializer
@@ -65,6 +66,15 @@ class UserViewSet(mixins.RetrieveModelMixin,
             user.subscribed_channels.remove(request.data['id'])
             user.save()
             return Response('Unsubscribed')
+
+    @action(methods=['get'], detail=True, permission_classes=[IsAuthenticated],
+            url_path='dashboard', url_name='dashboard')
+    def get_dashboard(self, request, pk=None):
+        user = self.get_object()
+        inner_qs = user.subscribed_channels.all()
+        entries = Thread.objects.filter(parent_channel__in=inner_qs).order_by('-creation_time')
+
+        return Response([ThreadSerializer(thread).data for thread in entries])
 
 
 class UserCreateViewSet(mixins.CreateModelMixin,

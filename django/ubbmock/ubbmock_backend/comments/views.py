@@ -15,7 +15,7 @@ class CommentViewSet(mixins.RetrieveModelMixin,
     """
     Updates and retrieves comments
     """
-    queryset = Comment.objects.all()
+    queryset = Comment.objects.all().order_by('-creation_time')
     serializer_class = CommentSerializer
     permission_classes = (AllowAny,)
 
@@ -23,7 +23,7 @@ class CommentViewSet(mixins.RetrieveModelMixin,
             url_path='replies', url_name='replies')
     def get_comments(self, request, pk=None):
         comment = self.get_object()
-        replies = comment.comment_set.all()
+        replies = comment.comment_set.all().order_by('-creation_time')
         return Response([CommentSerializer(reply).data for reply in replies])
 
     def get_serializer_class(self):
