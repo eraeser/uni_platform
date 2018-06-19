@@ -1,6 +1,7 @@
 import {
   SET_USER,
   UPDATE_TOKEN,
+  RESET_USER,
 } from '../actions/users';
 
  import { User } from '../records/User';
@@ -21,6 +22,8 @@ export default function userReducer(state = initialState, action) {
       }
       return new_state;
     }
+    case RESET_USER:
+      return initialState;
     default:
       return state;
   }

@@ -65,6 +65,7 @@ export default class ListComponent extends React.PureComponent {
         refreshing={this.state.refreshing}
         onRefresh={this._onRefresh}
         ListFooterComponent={() => <View style={{height: 100}} />}
+        ListEmptyComponent={() => <View style={{height: "100%"}} />}
       />
     );
   }

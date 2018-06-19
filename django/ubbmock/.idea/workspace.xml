@@ -2,16 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="ff393331-451f-48f8-9275-297cdd69d07b" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/misc.xml" afterPath="$PROJECT_DIR$/.idea/misc.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/ubbmock.iml" afterPath="$PROJECT_DIR$/.idea/ubbmock.iml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/ubbmock_backend/comments/models.py" afterPath="$PROJECT_DIR$/ubbmock_backend/comments/models.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/ubbmock_backend/comments/serializers.py" afterPath="$PROJECT_DIR$/ubbmock_backend/comments/serializers.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/ubbmock_backend/comments/views.py" afterPath="$PROJECT_DIR$/ubbmock_backend/comments/views.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/ubbmock_backend/config/common.py" afterPath="$PROJECT_DIR$/ubbmock_backend/config/common.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/ubbmock_backend/threads/models.py" afterPath="$PROJECT_DIR$/ubbmock_backend/threads/models.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/ubbmock_backend/threads/serializers.py" afterPath="$PROJECT_DIR$/ubbmock_backend/threads/serializers.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/ubbmock_backend/threads/views.py" afterPath="$PROJECT_DIR$/ubbmock_backend/threads/views.py" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />

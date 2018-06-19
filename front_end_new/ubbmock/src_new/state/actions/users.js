@@ -2,6 +2,7 @@ import LocalStorage from '../localStorage/LocalStorage';
 
 export const UPDATE_TOKEN = 'UPDATE_TOKEN';
 export const SET_USER = 'SET_USER';
+export const RESET_USER = 'RESET_USER';
 
 export function updateToken(token) {
   return {
@@ -14,6 +15,12 @@ export function setUser(config) {
   return {
     type: SET_USER,
     payload: config,
+  };
+}
+
+export function resetUser() {
+  return {
+    type: SET_USER,
   };
 }
 
