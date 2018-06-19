@@ -13,7 +13,7 @@ from ..threads.models import Thread
 class Comment(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     content = models.TextField(max_length=500)
-    votes = models.IntegerField(default=0, blank=True)
+    votes = models.ManyToManyField(settings.AUTH_USER_MODEL, through='CommentVotes', related_name='comment_votes',)
     author = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     parent_thread = models.ForeignKey(Thread, on_delete=models.CASCADE)
     parent_comment = models.ForeignKey('self', on_delete=models.CASCADE, null=True, blank=True)
@@ -22,3 +22,9 @@ class Comment(models.Model):
 
     def __str__(self):
         return str(self.id) + ' ' + str(self.author) + ' ' + str(self.parent_thread)
+
+
+class CommentVotes(models.Model):
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    comment = models.ForeignKey(Comment, on_delete=models.CASCADE)
+    vote_action = models.BooleanField(default=False)

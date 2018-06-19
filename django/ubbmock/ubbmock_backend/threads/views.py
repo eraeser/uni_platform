@@ -1,5 +1,5 @@
 from rest_framework import viewsets, mixins
-from rest_framework.permissions import AllowAny
+from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.decorators import action
 from rest_framework.response import Response
 
@@ -25,8 +25,23 @@ class ThreadViewSet(mixins.RetrieveModelMixin,
             url_path='comments', url_name='comments')
     def get_comments(self, request, pk=None):
         thread = self.get_object()
-        comments = thread.comment_set.all().order_by('-creation_time')
+        comments = thread.comment_set.filter(is_deleted=False).order_by('-creation_time')
         return Response([CommentSerializer(comment).data for comment in comments])
+
+    @action(methods=['patch'], detail=True, permission_classes=[IsAuthenticated],
+            url_path='vote', url_name='vote')
+    def vote(self, request, pk=None):
+        thread = self.get_object()
+        vote_action = request.data['action']
+        user = request.user.id
+        thread.votes.delete(user)
+
+        if vote_action == 'upvote':
+            thread.votes.up(user)
+        elif vote_action == 'downvote':
+            thread.votes.down(user)
+
+        return Response('Thread ' + str(vote_action))
 
     def get_serializer_class(self):
         if self.action == 'create':
