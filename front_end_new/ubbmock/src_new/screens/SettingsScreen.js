@@ -1,9 +1,6 @@
 import React from 'react';
 import {
     ScrollView,
-    Text,
-    TextInput,
-    View,
     Button,
 } from 'react-native';
 import { connect } from "react-redux";

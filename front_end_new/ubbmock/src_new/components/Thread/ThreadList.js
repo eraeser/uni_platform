@@ -13,6 +13,8 @@ import {
   getDashboardAsync,
 } from '../../business/threads';
 
+import LocalStorage from '../../state/localStorage/LocalStorage';
+
 // MOCK DATA
 let _data;
 // _data = require('../utils/mockdata').threads;
@@ -26,15 +28,52 @@ class ThreadList extends React.Component {
     }
   }
 
+  _getDataFromServerAsync = async () => {
+    let data;
+    if (this.props.channel_id) {
+      data = await getChannelThreadsAsync(this.props.channel_id);
+      let threads = {};
+      threads[`${this.props.channel_id}`] = data;
+      await LocalStorage.saveThreadsAsync(threads);
+      console.log('THREADS FROM SERVER');
+    } else if(this.props.dashboard) {
+      data = await getDashboardAsync(this.props.user.auth_token);
+      await LocalStorage.saveDashboardAsync(data);
+      console.log('DASH FROM SERVER');
+    }
+    // console.log(data);
+    this.setState({data: data});
+  }
+
   _loadCacheAsync = async () => {
     let data;
     if (this.props.channel_id) {
-      console.log(this.props.channel_id);
-      data = await getChannelThreadsAsync(this.props.channel_id);
+      // console.log(this.props.channel_id);
+      data = await LocalStorage.getThreadsAsync()
+      if (data[`${this.props.channel_id}`]) {
+        console.log('THREADS FROM CACHE');
+        data = data[`${this.props.channel_id}`]
+      } else {
+        data = await getChannelThreadsAsync(this.props.channel_id);
+        let threads = {};
+        threads[`${this.props.channel_id}`] = data;
+        LocalStorage.saveThreadsAsync(threads);
+        console.log('THREADS FROM SERVER');
+      }
     } else if(this.props.dashboard) {
-      data = await getDashboardAsync(this.props.user.auth_token);
+
+      data = await LocalStorage.getDashboardAsync();
+      if (data) {
+        data = data.threads;
+        console.log('DASH FROM CACHE');
+        // console.log(data);
+      } else {
+        data = await getDashboardAsync(this.props.user.auth_token);
+        LocalStorage.saveDashboardAsync(data);
+        console.log('DASH FROM SERVER');
+      }
     }
-    console.log(data);
+    // console.log(data);
     this.setState({data: data});
   };
 
@@ -59,9 +98,9 @@ class ThreadList extends React.Component {
             data={_data || this.state.data}
             itemModel={ThreadItem}
             onPressItem={item => {
-              this.props.navigation.navigate('Thread', {item: item});
+              this.props.navigation.navigate('Thread', {thread: item, user: this.props.user});
             }}
-            onRefresh={this._loadDataAsync}
+            onRefresh={this._getDataFromServerAsync}
           />
       )}
       </View>)

@@ -9,6 +9,7 @@ export const User = Record({
   last_name: null,
   username: null,
   is_admin: null,
+  date_joined: null,
 });
 
 

@@ -10,7 +10,7 @@ import { ThreadList } from '../components/Thread';
 class HomeScreen extends React.Component {
   render() {
     return (
-      <View style={{padding: 20}}>
+      <View>
         <Text
           style={{fontSize: 27}}
         >

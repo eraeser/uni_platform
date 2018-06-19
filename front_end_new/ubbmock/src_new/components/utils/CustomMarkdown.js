@@ -26,7 +26,6 @@ const rules = {
 };
 
 const CustomMarkdown = (props) => {
-  console.log(props.children);
   return (
     <Markdown rules={rules}>{props.children ? props.children : '' }</Markdown>
   );

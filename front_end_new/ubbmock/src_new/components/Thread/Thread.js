@@ -10,6 +10,9 @@ import {
 
 import { CommentList } from '../Comment';
 import { Page, ButtonRow } from './components';
+import Controls from '../utils/Controls';
+
+import { deleteThreadAsync } from '../../business/threads';
 
 const sections = (renderContent, renderComments) => ([
   {title: 'main', data: ['content'], key: 'main_section', renderItem: renderContent},
@@ -19,11 +22,28 @@ const sections = (renderContent, renderComments) => ([
 class Thread extends React.Component {
   constructor(props) {
     super(props);
-    const thread = props.navigation.getParam('item', 'NO-ITEM');
+    const thread = props.navigation.getParam('thread', 'NO-ITEM');
+    const user = props.navigation.getParam('user', 'no-item');
     this.state = {
       showButtons: false,
       thread,
+      user,
     }
+  }
+
+  onDelete = () => {
+    deleteThreadAsync(this.state.thread.id, this.state.user.auth_token);
+    this.props.navigation.goBack();
+  }
+
+  onEdit = () => {
+    this.props.navigation.navigate(
+      'CreateThread',
+      {
+        action: 'edit',
+        thread: this.state.thread,
+      },
+    );
   }
 
   onViewableItemsChanged = ({viewableItems, changed}) => {
@@ -47,7 +67,7 @@ class Thread extends React.Component {
   }
 
   onComments = () => {
-    console.log('go to comments');
+    // console.log('go to comments');
     this._sectionList.scrollToLocation({
       itemIndex: 0,
       sectionIndex: 1,
@@ -79,7 +99,7 @@ class Thread extends React.Component {
   )
 
   renderComments = () => (
-    <CommentList navigation={this.props.navigation} thread_id={this.state.thread.id} />
+    <CommentList navigation={this.props.navigation} thread={this.state.thread} />
   )
 
   renderSectionHeader = ({section: {title}}) => {
@@ -92,6 +112,7 @@ class Thread extends React.Component {
     return (
       <View style={{height: '100%'}}>
         <Text>Title: {this.state.thread.name}</Text>
+        <Text>Description: {this.state.thread.description}</Text>
         <SectionList
           onViewableItemsChanged={this.onViewableItemsChanged}
           sections={sections(this.renderContent, this.renderComments)}
@@ -106,6 +127,7 @@ class Thread extends React.Component {
         <View>
           <ButtonRow show={this.state.showButtons} onComments={this.onComments} />
           <Button onPress={() => this.props.navigation.navigate('CreateComment', {'thread': this.state.thread})} title="Comment" />
+          <Controls onDelete={this.onDelete} onEdit={this.onEdit} />
         </View>
       </View>
     );

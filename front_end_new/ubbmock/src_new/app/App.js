@@ -29,6 +29,7 @@ class App extends React.Component {
   }
 
   _loadCacheAsync = async () => {
+    await LocalStorage.checkKeyConsistency()
     let user = await LocalStorage.getUserAsync();
 
     console.log(user);

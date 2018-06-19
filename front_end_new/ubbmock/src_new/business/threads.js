@@ -18,6 +18,8 @@ async function deleteThreadAsync(thread_id, token) {
     );
     console.log(response);
     if(response.ok){
+      if (response.status === 204)
+        return {};
       let responseJson = await response.json();
       return responseJson;
     }
@@ -38,17 +40,6 @@ async function updateThreadAsync(data, token) {
       thread_id,
     } = data;
 
-    let body = {}
-    if (content) {
-      body.content = content;
-    }
-    if (name) {
-      body.name = name;
-    }
-    if (description) {
-      body.description = description;
-    }
-
     let response = await fetch(
       `${HOST}:${PORT}/${API}/threads/${thread_id}/`, {
         method: 'PATCH',
@@ -59,7 +50,11 @@ async function updateThreadAsync(data, token) {
           'Access-Control-Allow-Credentials': 'true',
           'Authorization': `${AUTH_PREFIX} ${token}`,
         },
-        body: JSON.stringify(body),
+        body: JSON.stringify({
+          content,
+          name,
+          description,
+        }),
       }
     );
     console.log(response);

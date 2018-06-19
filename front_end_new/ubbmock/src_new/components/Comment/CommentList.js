@@ -14,6 +14,8 @@ import {
   getThreadCommentsAsync,
 } from '../../business/comments';
 
+import LocalStorage from '../../state/localStorage/LocalStorage';
+
 // MOCK DATA
 let _data;
 // _data = require('../utils/mockdata').comments;
@@ -27,9 +29,32 @@ class CommentList extends React.Component {
     }
   }
 
+  _getDataFromServerAsync = async () => {
+    let data;
+    data = await getThreadCommentsAsync(this.props.thread.id);
+    let comments = {};
+    comments[`${this.props.thread.id}`] = data;
+    LocalStorage.saveCommentsAsync(comments);
+    console.log('COMMS FROM SERVER');
+    // console.log(data);
+    this.setState({data: data});
+  }
+
   _loadCacheAsync = async () => {
-    let data = await getThreadCommentsAsync(this.props.thread_id);
-    console.log(data);
+    let data;
+    data = await LocalStorage.getCommentsAsync()
+    // console.log(data);
+    if (data[`${this.props.thread.id}`]) {
+      data = data[`${this.props.thread.id}`]
+      console.log('COMMS FROM CACHE');
+    } else {
+      data = await getThreadCommentsAsync(this.props.thread.id);
+      let comments = {};
+      comments[`${this.props.thread.id}`] = data;
+      LocalStorage.saveCommentsAsync(comments);
+      console.log('COMMS FROM SERVER');
+    }
+    // console.log(data);
     this.setState({data: data});
   };
 
@@ -54,9 +79,9 @@ class CommentList extends React.Component {
             data={_data || this.state.data}
             itemModel={CommentItem}
             onPressItem={item => {
-              this.props.navigation.navigate('Comment', {item: item});
+              this.props.navigation.navigate('Comment', {comment: item, thread: this.props.thread, user: this.props.user});
             }}
-            onRefresh={this._loadDataAsync}
+            onRefresh={this._getDataFromServerAsync}
           />
       )}
       </View>)

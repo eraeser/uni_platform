@@ -7,6 +7,7 @@ async function updateCommentAsync(data, token) {
     const {
       content,
       comment_id,
+      is_deleted,
     } = data;
 
     let response = await fetch(
@@ -21,6 +22,7 @@ async function updateCommentAsync(data, token) {
         },
         body: JSON.stringify({
           content,
+          is_deleted: is_deleted || false,
         }),
       }
     );

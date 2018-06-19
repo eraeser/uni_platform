@@ -13,6 +13,8 @@ import {
   getSubscribedChannelsAsync,
 } from '../../business/channels';
 
+import LocalStorage from '../../state/localStorage/LocalStorage';
+
 // MOCK DATA
 let _data;
 // _data = require('../utils/mockdata').channels;
@@ -27,9 +29,26 @@ const ChannelList = type => class CustomList extends React.Component {
     }
   }
 
-  _loadCacheAsync = async () => {
+  _getDataFromServerAsync = async () => {
     let data = type === 'all' ? await getAllChannelsAsync() : await getSubscribedChannelsAsync(this.props.user.auth_token);
-    console.log(data);
+    type === 'all' ? LocalStorage.saveCommentsAsync({data}) : LocalStorage.saveSubscribedChannelsAsync({data})
+    console.log('CHANNELS FROM SERVER');
+    // console.log(data);
+    this.setState({data: data});
+  }
+
+  _loadCacheAsync = async () => {
+    let data;
+    data = type === 'all' ? await LocalStorage.getChannelsAsync() : await LocalStorage.getSubscribedChannelsAsync();
+    if (data.data) {
+      data = data.data
+      console.log('CHANNELS FROM CACHE');
+    } else {
+      data = type === 'all' ? await getAllChannelsAsync() : await getSubscribedChannelsAsync(this.props.user.auth_token);
+      type === 'all' ? LocalStorage.saveCommentsAsync({data}) : LocalStorage.saveSubscribedChannelsAsync({data})
+      console.log('CHANNELS FROM SERVER');
+    }
+    // console.log(data);
     this.setState({data: data});
   };
 
@@ -56,7 +75,7 @@ const ChannelList = type => class CustomList extends React.Component {
             onPressItem={item => {
               this.props.navigation.navigate('Channel', {item: item});
             }}
-            onRefresh={this._loadDataAsync}
+            onRefresh={this._getDataFromServerAsync}
           />
       )}
       </View>)
