@@ -29,6 +29,14 @@ class CommentList extends React.Component {
     }
   }
 
+  componentDidMount() {
+    setInterval(this._getDataFromServerAsync, 5000);
+  }
+
+  componentWillUnmount() {
+    clearInterval()
+  }
+
   _getDataFromServerAsync = async () => {
     let data;
     data = await getThreadCommentsAsync(this.props.thread.id);

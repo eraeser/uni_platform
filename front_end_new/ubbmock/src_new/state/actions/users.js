@@ -20,14 +20,14 @@ export function setUser(config) {
 
 export function resetUser() {
   return {
-    type: SET_USER,
+    type: RESET_USER,
   };
 }
 
 export function updateTokenThunk(token) {
   return (dispatch, getState) => {
     dispatch(updateToken(token));
-    return LocalStorage.setUserAsync(getState().users);
+    return LocalStorage.setUserAsync({auth_token: token});
   }
 }
 

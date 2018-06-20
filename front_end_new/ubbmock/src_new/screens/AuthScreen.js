@@ -27,9 +27,9 @@ export class AuthScreen extends React.Component {
   fetchUser = async () => {
     this.setState({isFetching: true});
     const {token, user} = await logInUserAsync({username: this.state.username, password: this.state.password});
-    this.props.dispatch(updateTokenThunk(token))
-    .then(() => this.props.dispatch(setUserThunk(user))
-    .then(() => this.setState({isFetching: false})));
+    token && this.props.dispatch(updateTokenThunk(token))
+    .then(() => this.props.dispatch(setUserThunk(user)));
+    !token && this.setState({isFetching: false})
   }
 
   render() {

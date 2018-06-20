@@ -61,9 +61,8 @@ class ThreadList extends React.Component {
         console.log('THREADS FROM SERVER');
       }
     } else if(this.props.dashboard) {
-
       data = await LocalStorage.getDashboardAsync();
-      if (data) {
+      if (data.threads) {
         data = data.threads;
         console.log('DASH FROM CACHE');
         // console.log(data);

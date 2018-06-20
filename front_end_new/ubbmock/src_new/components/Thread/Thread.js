@@ -68,6 +68,7 @@ class Thread extends React.Component {
 
   onComments = () => {
     // console.log('go to comments');
+    console.log(this._comms);
     this._sectionList.scrollToLocation({
       itemIndex: 0,
       sectionIndex: 1,

@@ -15,9 +15,8 @@ class SettingsScreen extends React.Component {
   }
 
   _onClearCache = async () => {
-    await LocalStorage.clearAllAsync()
-    .then(() => this.props.dispatch(resetUser()))
-    .then(() => this.props.dispatch(updateTokenThunk('')));
+    await LocalStorage.clearAllAsync();
+    this.props.dispatch(resetUser());
   }
 
   render() {
@@ -36,8 +35,4 @@ class SettingsScreen extends React.Component {
   }
 }
 
-const mapStateToProps = state => ({
-  user: state.users,
-});
-
-export default connect(mapStateToProps)(SettingsScreen);
+export default connect()(SettingsScreen);

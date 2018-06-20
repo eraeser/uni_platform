@@ -57,7 +57,7 @@ export default class ListComponent extends React.PureComponent {
     return (
       <FlatList
         ItemSeparatorComponent={() => (
-          <View style={{marginBottom: 10}} />
+          <View style={{marginTop: 5, marginBottom: 5, borderWidth: 0.33, borderColor: 'rgba(0,0,0,0.3)'}} />
         )}
         data={this.props.data}
         keyExtractor={this._keyExtractor}

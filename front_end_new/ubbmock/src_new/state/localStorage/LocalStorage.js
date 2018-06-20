@@ -43,7 +43,7 @@ async function getUserAsync() {
 }
 
 function setUserAsync(user) {
-  return AsyncStorage.setItem(Keys.User, JSON.stringify(user));
+  return AsyncStorage.mergeItem(Keys.User, JSON.stringify(user));
 }
 
 function removeUserAsync() {

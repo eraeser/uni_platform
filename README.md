@@ -23,4 +23,21 @@ The app will permit students to stay up to date with their university life, from
 
 ---
 
+## Instructions
+Make sure to modify the configs of both back and front for connection to DB and network
+### FrontEnd
+* npm install -g react-native-cli
+* install android studio and follow instructions from [React Native](https://facebook.github.io/react-native/docs/getting-started.html)
+* cd front_end/ubbmock/
+* run npm install
+* run react-native run-android
+
+### Backend
+* cd django/ubbmock
+* create a virtual enviroment using virtualenv
+* activate the virtual enviroment
+* pip install -r requirements.txt
+* python ./manage.py runserver
+
+
 _Robert-Cristian Iurisniti_ (iurisnit.robert@gmail.com)

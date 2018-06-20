@@ -9,6 +9,7 @@ import LocalStorage from '../state/localStorage/LocalStorage';
 import { setUser } from '../state/actions/users';
 
 function isSignedIn(userState) {
+  console.log(userState);
   return !!userState.auth_token;
 }
 
@@ -32,7 +33,7 @@ class App extends React.Component {
     await LocalStorage.checkKeyConsistency()
     let user = await LocalStorage.getUserAsync();
 
-    console.log(user);
+    // console.log(user);
 
     this.props.dispatch(setUser(user));
   };

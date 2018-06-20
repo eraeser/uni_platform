@@ -23,7 +23,7 @@ export default function userReducer(state = initialState, action) {
       return new_state;
     }
     case RESET_USER:
-      return initialState;
+      return state.clear();
     default:
       return state;
   }
