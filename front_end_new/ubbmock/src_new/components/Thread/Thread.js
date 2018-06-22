@@ -11,6 +11,7 @@ import {
 import { CommentList } from '../Comment';
 import { Page, ButtonRow } from './components';
 import Controls from '../utils/Controls';
+import MainHeader from '../utils/MainHeader';
 
 import { deleteThreadAsync } from '../../business/threads';
 
@@ -95,8 +96,19 @@ class Thread extends React.Component {
     return item.key ? item.key : item + index;
   }
 
+  renderDescription = () => (
+    this.state.thread.description ? (
+      <View style={{marginTop: 2, marginBottom: 2, borderBottomWidth: 0.33, borderColor: 'rgba(0,0,0,0.3)'}}>
+        <Text>{this.state.thread.description}</Text>
+      </View>
+    ) : null
+  )
+
   renderContent = () => (
-    <View style={{width: '90%', alignSelf: 'center'}}><Page data={this.state.thread.content} /></View>
+    <View style={{width: '90%', alignSelf: 'center'}}>
+      {this.renderDescription()}
+      <Page data={this.state.thread.content} />
+    </View>
   )
 
   renderComments = () => (
@@ -112,8 +124,11 @@ class Thread extends React.Component {
   render() {
     return (
       <View style={{height: '100%'}}>
-        <Text>Title: {this.state.thread.name}</Text>
-        <Text>Description: {this.state.thread.description}</Text>
+        <MainHeader>
+          <Controls onDelete={this.onDelete} onEdit={this.onEdit} >
+            <Text>{this.state.thread.name}</Text>
+          </Controls>
+        </MainHeader>
         <SectionList
           onViewableItemsChanged={this.onViewableItemsChanged}
           sections={sections(this.renderContent, this.renderComments)}
@@ -128,7 +143,6 @@ class Thread extends React.Component {
         <View>
           <ButtonRow show={this.state.showButtons} onComments={this.onComments} />
           <Button onPress={() => this.props.navigation.navigate('CreateComment', {'thread': this.state.thread})} title="Comment" />
-          <Controls onDelete={this.onDelete} onEdit={this.onEdit} />
         </View>
       </View>
     );

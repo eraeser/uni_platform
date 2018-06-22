@@ -27,6 +27,24 @@ const ChannelList = type => class CustomList extends React.Component {
       data: [],
       isReady: false,
     }
+    this.intervalId = null;
+  }
+
+  componentDidMount() {
+    if (this.props.online) {
+      this.intervalId = setInterval(this._getDataFromServerAsync, 5000);
+    }
+  }
+
+  componentDidUpdate() {
+    if (!this.props.online) {
+      clearInterval(this.intervalId);
+    }
+  }
+
+  componentWillUnmount() {
+    console.log('on unmount');
+    clearInterval(this.intervalId);
   }
 
   _getDataFromServerAsync = async () => {
@@ -84,6 +102,7 @@ const ChannelList = type => class CustomList extends React.Component {
 
 const mapStateToProps = state => ({
   user: state.users,
+  online: state.internals.connectivity,
 });
 
 const ConnectedChannelList = arg => connect(mapStateToProps)(ChannelList(arg));

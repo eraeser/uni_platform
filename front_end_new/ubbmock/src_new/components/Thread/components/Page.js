@@ -1,5 +1,5 @@
 import React from 'react';
-import Markdown from 'react-native-markdown-renderer';
+import Markdown from '../../utils/CustomMarkdown';
 
 let copy;
 // copy = require('../../utils/mockdata').mark;

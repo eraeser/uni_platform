@@ -7,6 +7,7 @@ import {
 
 import Markdown from '../utils/CustomMarkdown';
 import Controls from '../utils/Controls';
+import MainHeader from '../utils/MainHeader';
 
 import { updateCommentAsync } from '../../business/comments';
 
@@ -48,11 +49,14 @@ class Comment extends React.Component {
   render() {
     return(
       <View style={{height: '100%'}}>
-        <Text>{this.state.comment.username}</Text>
+        <MainHeader>
+          <Controls onDelete={this.onDelete} onEdit={this.onEdit}>
+            <Text>{this.state.comment.username}</Text>
+          </Controls>
+        </MainHeader>
         <ScrollView>
           <Markdown>{this.state.comment.content}</Markdown>
         </ScrollView>
-        <Controls onDelete={this.onDelete} onEdit={this.onEdit} />
       </View>
     );
   }

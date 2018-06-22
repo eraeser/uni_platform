@@ -27,14 +27,24 @@ class CommentList extends React.Component {
       data: [],
       isReady: false,
     }
+    this.intervalId = null;
   }
 
+
   componentDidMount() {
-    setInterval(this._getDataFromServerAsync, 5000);
+    if (this.props.online) {
+      this.intervalId = setInterval(this._getDataFromServerAsync, 5000);
+    }
+  }
+
+  componentDidUpdate() {
+    if (!this.props.online) {
+      clearInterval(this.intervalId);
+    }
   }
 
   componentWillUnmount() {
-    clearInterval()
+    clearInterval(this.intervalId);
   }
 
   _getDataFromServerAsync = async () => {
@@ -98,6 +108,7 @@ class CommentList extends React.Component {
 
 const mapStateToProps = state => ({
   user: state.users,
+  online: state.internals.connectivity,
 });
 
 

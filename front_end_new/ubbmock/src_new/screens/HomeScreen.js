@@ -6,16 +6,15 @@ import {
 import { connect } from "react-redux";
 
 import { ThreadList } from '../components/Thread';
+import MainHeader from '../components/utils/MainHeader';
 
 class HomeScreen extends React.Component {
   render() {
     return (
       <View>
-        <Text
-          style={{fontSize: 27}}
-        >
-          {`Welcome ${this.props.user.full_name}`}
-        </Text>
+        <MainHeader>
+          <Text>{`Welcome ${this.props.user.full_name}`}</Text>
+        </MainHeader>
         <ThreadList navigation={this.props.navigation} dashboard />
       </View>)
   }

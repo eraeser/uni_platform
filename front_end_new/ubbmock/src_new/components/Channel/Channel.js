@@ -7,6 +7,7 @@ import {
 } from 'react-native';
 
 import { ThreadList } from '../Thread';
+import MainHeader from '../utils/MainHeader';
 
 const styles = StyleSheet.create({
   fab: {
@@ -36,7 +37,7 @@ class Channel extends React.Component {
 
     return(
       <View style={{height: '100%'}}>
-        <Text>itemId: {JSON.stringify(itemChannel.name)}</Text>
+        <MainHeader><Text>{itemChannel.name}</Text></MainHeader>
         <ThreadList navigation={this.props.navigation} channel_id={itemChannel.id} />
         <View style={styles.fab}>
           <TouchableOpacity onPress={() => this.props.navigation.navigate('CreateThread', {'channel': itemChannel})}>

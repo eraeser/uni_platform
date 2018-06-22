@@ -3,7 +3,7 @@ import { Provider } from "react-redux";
 import configureStore from "../state/store/configureStore";
 import App from '../app/App';
 
-const store = configureStore();
+export const store = configureStore();
 
 class Root extends React.Component {
   render() {

@@ -6,11 +6,13 @@ import {
   Button,
   ScrollView,
   ToastAndroid,
+  View,
 } from 'react-native';
 import { connect } from "react-redux";
 
 import { postCommentAsync, updateCommentAsync } from '../../business/comments';
 import Markdown from '../utils/CustomMarkdown';
+import MainHeader from '../utils/MainHeader';
 
 class CreateComment extends React.Component {
   constructor(props) {
@@ -69,23 +71,31 @@ class CreateComment extends React.Component {
     const { height, thread } = this.state;
 
     return(
-      <ScrollView>
-        <Text>Thread: {thread.name}</Text>
-        <TextInput
-          multiline
-          value={this.state.value}
-          maxLength={500}
-          onChangeText={value => this.setState({value})}
-          placeholder="Comment here ..."
-          style={{height}}
-          onContentSizeChange={(e) => this.updateSize(e.nativeEvent.contentSize.height)}
-        />
+      <View>
+        <MainHeader>
+          <Text>{thread.name}</Text>
+        </MainHeader>
+        <ScrollView>
+          <TextInput
+            multiline
+            value={this.state.value}
+            maxLength={500}
+            onChangeText={value => this.setState({value})}
+            placeholder="Comment here ..."
+            style={{height}}
+            onContentSizeChange={(e) => this.updateSize(e.nativeEvent.contentSize.height)}
+          />
+          {this.state.value ?
+            <MainHeader height={20}>
+              <Text>Comment Preview</Text>
+            </MainHeader> : null}
+          <Markdown>{this.state.value}</Markdown>
+        </ScrollView>
         <Button
           title="Submit"
           onPress={this.onFetch()}
         />
-        <Markdown>{this.state.value}</Markdown>
-      </ScrollView>
+      </View>
     );
   }
 }

@@ -14,7 +14,7 @@ const ChannelItem = (props) => {
           style={{width: 50, height: 50, borderRadius: 50}}
           source={{uri: 'https://facebook.github.io/react-native/docs/assets/favicon.png'}}
         />
-        <View>
+        <View style={{marginLeft: 10}}>
           <Text>
             {props.item.name}
           </Text>

@@ -6,11 +6,13 @@ import {
   Button,
   ScrollView,
   ToastAndroid,
+  View,
 } from 'react-native';
 import { connect } from "react-redux";
 
 import { postThreadAsync, updateThreadAsync } from '../../business/threads';
 import Markdown from '../utils/CustomMarkdown';
+import MainHeader from '../utils/MainHeader';
 
 class CreateThread extends React.Component {
   constructor(props) {
@@ -63,45 +65,53 @@ class CreateThread extends React.Component {
     },this.props.currentUser.auth_token);
     response
     ? this.props.navigation.goBack()
-    : ToastAndroid.show('Could not submit comment', ToastAndroid.LONG);
+    : ToastAndroid.show('Could not submit thread', ToastAndroid.LONG);
   }
 
   render() {
     const { descriptionHeight, contentHeight, channel } = this.state;
 
     return(
-      <ScrollView>
-        <Text>Channel: {channel.name}</Text>
-        <TextInput
-          maxLength={50}
-          onChangeText={nameValue => this.setState({nameValue})}
-          placeholder="Name here ..."
-          value={this.state.nameValue}
-        />
-        <TextInput
-          multiline
-          maxLength={255}
-          value={this.state.descriptionValue}
-          onChangeText={descriptionValue => this.setState({descriptionValue})}
-          placeholder="Description here ..."
-          style={{height: descriptionHeight}}
-          onContentSizeChange={(e) => this.setState({descriptionHeight: e.nativeEvent.contentSize.height})}
-        />
-        <TextInput
-          multiline
-          maxLength={1500}
-          value={this.state.contentValue}
-          onChangeText={contentValue => this.setState({contentValue})}
-          placeholder="Content here ..."
-          style={{height: contentHeight}}
-          onContentSizeChange={(e) => this.setState({contentHeight: e.nativeEvent.contentSize.height})}
-        />
+      <View>
+        <MainHeader>
+          <Text>{channel.name}</Text>
+        </MainHeader>
+        <ScrollView>
+          <TextInput
+            maxLength={50}
+            onChangeText={nameValue => this.setState({nameValue})}
+            placeholder="Name here ..."
+            value={this.state.nameValue}
+          />
+          <TextInput
+            multiline
+            maxLength={255}
+            value={this.state.descriptionValue}
+            onChangeText={descriptionValue => this.setState({descriptionValue})}
+            placeholder="Description here ..."
+            style={{height: descriptionHeight}}
+            onContentSizeChange={(e) => this.setState({descriptionHeight: e.nativeEvent.contentSize.height})}
+          />
+          <TextInput
+            multiline
+            maxLength={1500}
+            value={this.state.contentValue}
+            onChangeText={contentValue => this.setState({contentValue})}
+            placeholder="Content here ..."
+            style={{height: contentHeight}}
+            onContentSizeChange={(e) => this.setState({contentHeight: e.nativeEvent.contentSize.height})}
+          />
+          {this.state.contentValue ?
+            <MainHeader height={20}>
+              <Text>Content Preview</Text>
+            </MainHeader> : null}
+          <Markdown>{this.state.contentValue}</Markdown>
+        </ScrollView>
         <Button
           title="Submit"
           onPress={this.onFetch()}
         />
-        <Markdown>{this.state.contentValue}</Markdown>
-      </ScrollView>
+      </View>
     );
   }
 }

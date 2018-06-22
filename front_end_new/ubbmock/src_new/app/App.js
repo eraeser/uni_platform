@@ -7,6 +7,7 @@ import MainApp from '../screens/AppScreen';
 
 import LocalStorage from '../state/localStorage/LocalStorage';
 import { setUser } from '../state/actions/users';
+import { subscribeServices, unsubscribeServices } from '../services';
 
 function isSignedIn(userState) {
   console.log(userState);
@@ -19,6 +20,14 @@ class App extends React.Component {
     this.state = {
       isReady: false,
     }
+  }
+
+  componentDidMount() {
+    subscribeServices();
+  }
+
+  componentWillUnmount() {
+    unsubscribeServices();
   }
 
   _fakeAsyncCall = () => {

@@ -2,6 +2,7 @@ import React from 'react';
 import {
   View,
   Button,
+  Text,
   TouchableOpacity,
   StyleSheet,
 } from 'react-native';
@@ -18,13 +19,29 @@ const styles = StyleSheet.create({
   },
   buttonContainer: {
     flex: 1,
+    backgroundColor: '#e9e9ef',
+  },
+  button: {
+    backgroundColor: '#f7f7f7',
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingTop: 10,
+    paddingBottom: 10,
+    borderColor: 'rgba(0,0,0,0.3)',
+    borderTopWidth: 0.33,
+    borderBottomWidth: 0.33,
+  },
+  text: {
+    color: '#3467f8',
   },
 });
 
 const CustomButton = (props) => {
   return (
     <View style={props.style || styles.buttonContainer}>
-      <Button onPress={props.onPress} title={props.title} />
+      <TouchableOpacity style={styles.button} onPress={props.onPress}>
+        <Text style={styles.text}>{props.title}</Text>
+      </TouchableOpacity>
     </View>
   );
 }
