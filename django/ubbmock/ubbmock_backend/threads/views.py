@@ -1,9 +1,10 @@
+from django.core.exceptions import ObjectDoesNotExist
 from rest_framework import viewsets, mixins
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.decorators import action
 from rest_framework.response import Response
 
-from .models import Thread
+from .models import Thread, ThreadVotes
 from .serializers import CreateThreadSerializer, ThreadSerializer
 from ..comments.serializers import CommentSerializer
 
@@ -33,15 +34,25 @@ class ThreadViewSet(mixins.RetrieveModelMixin,
     def vote(self, request, pk=None):
         thread = self.get_object()
         vote_action = request.data['action']
-        user = request.user.id
-        thread.votes.delete(user)
 
-        if vote_action == 'upvote':
-            thread.votes.up(user)
-        elif vote_action == 'downvote':
-            thread.votes.down(user)
+        try:
+            vote = ThreadVotes.objects.filter(user=request.user, thread=thread).get()
+            vote.delete()
+            if vote_action == 'upvote' and not vote.vote_action:
+                v = ThreadVotes(user=request.user, thread=thread, vote_action=True)
+                v.save()
+            elif vote_action == 'downvote' and vote.vote_action:
+                v = ThreadVotes(user=request.user, thread=thread, vote_action=False)
+                v.save()
+        except ObjectDoesNotExist:
+            if vote_action == 'upvote':
+                v = ThreadVotes(user=request.user, thread=thread, vote_action=True)
+                v.save()
+            elif vote_action == 'downvote':
+                v = ThreadVotes(user=request.user, thread=thread, vote_action=False)
+                v.save()
 
-        return Response('Thread ' + str(vote_action))
+        return Response(thread.threadvotes_set.filter(vote_action=True).count() - thread.threadvotes_set.filter(vote_action=False).count())
 
     def get_serializer_class(self):
         if self.action == 'create':

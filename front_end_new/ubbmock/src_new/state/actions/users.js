@@ -24,6 +24,13 @@ export function resetUser() {
   };
 }
 
+export function resetUserThunk() {
+  return (dispatch, getState) => {
+    dispatch(resetUser());
+    return LocalStorage.removeUserAsync();
+  }
+}
+
 export function updateTokenThunk(token) {
   return (dispatch, getState) => {
     dispatch(updateToken(token));

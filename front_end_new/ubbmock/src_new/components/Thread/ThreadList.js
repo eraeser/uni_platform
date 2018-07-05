@@ -114,7 +114,7 @@ class ThreadList extends React.Component {
             data={_data || this.state.data}
             itemModel={ThreadItem}
             onPressItem={item => {
-              this.props.navigation.navigate('Thread', {thread: item, user: this.props.user});
+              this.props.navigation.navigate('Thread', {thread: item});
             }}
             onRefresh={this._getDataFromServerAsync}
           />

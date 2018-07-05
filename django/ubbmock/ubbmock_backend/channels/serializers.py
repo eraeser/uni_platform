@@ -6,7 +6,7 @@ class ChannelSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Channel
-        fields = ('id', 'name', 'description', 'creation_time')
+        fields = ('id', 'name', 'description', 'creation_time', 'icon')
         read_only_fields = ('name', 'creation_time')
 
 
@@ -17,4 +17,4 @@ class CreateChannelSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Channel
-        fields = ('id', 'name', 'description', 'creation_time')
+        fields = ('id', 'name', 'description', 'creation_time', 'icon')

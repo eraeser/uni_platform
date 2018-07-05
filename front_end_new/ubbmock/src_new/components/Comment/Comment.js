@@ -5,6 +5,8 @@ import {
   ScrollView,
 } from 'react-native';
 
+import { connect } from 'react-redux';
+
 import Markdown from '../utils/CustomMarkdown';
 import Controls from '../utils/Controls';
 import MainHeader from '../utils/MainHeader';
@@ -18,11 +20,9 @@ class Comment extends React.Component {
     super(props)
     const comment = props.navigation.getParam('comment', 'NO-ID');
     const thread = props.navigation.getParam('thread', 'NO-ID');
-    const user = props.navigation.getParam('user', 'NO-ID');
     this.state = {
       comment,
       thread,
-      user,
     }
   }
 
@@ -42,7 +42,7 @@ class Comment extends React.Component {
       comment_id: this.state.comment.id,
       content: this.state.comment.content,
       is_deleted: true,
-    },this.state.user.auth_token);
+    },this.props.user.auth_token);
     this.props.navigation.goBack();
   }
 
@@ -50,8 +50,8 @@ class Comment extends React.Component {
     return(
       <View style={{height: '100%'}}>
         <MainHeader>
-          <Controls onDelete={this.onDelete} onEdit={this.onEdit}>
-            <Text>{this.state.comment.username}</Text>
+          <Controls onDelete={this.onDelete} onEdit={this.onEdit} enable={this.props.user.id === this.state.comment.author}>
+            <Text style={{textAlign: 'center'}}>{this.state.comment.username}</Text>
           </Controls>
         </MainHeader>
         <ScrollView>
@@ -62,4 +62,8 @@ class Comment extends React.Component {
   }
 }
 
-export default Comment;
+const mapStateToProps = (state) => ({
+  user: state.users,
+})
+
+export default connect(mapStateToProps)(Comment);

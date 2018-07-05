@@ -5,22 +5,22 @@ import { HOST, PORT, API, AUTH_PREFIX } from './config';
 async function updateChannelAsync(data, token) {
   try {
     const {
-      name,
       description,
       channel_id,
+      image,
     } = data;
 
     let body = {}
-    if (name) {
-      body.name = name;
-    }
     if (description) {
       body.description = description;
+    }
+    if (image) {
+      body.icon = image;
     }
 
     let response = await fetch(
       `${HOST}:${PORT}/${API}/channels/${channel_id}/`, {
-        method: 'PATCH',
+        method: 'PUT',
         headers: {
           Accept: 'application/json',
           'Content-Type': 'application/json',
@@ -31,6 +31,7 @@ async function updateChannelAsync(data, token) {
         body: JSON.stringify(body),
       }
     );
+    console.log(body);
     console.log(response);
     if(response.ok){
       let responseJson = await response.json();

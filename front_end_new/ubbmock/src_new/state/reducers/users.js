@@ -17,7 +17,7 @@ export default function userReducer(state = initialState, action) {
         action.payload && Object.entries(action.payload).forEach(([key, value]) =>
           state.set(key, value))
         });
-      if (action.payload && action.payload.first_name && action.payload.last_name) {
+      if (action.payload && (action.payload.first_name || action.payload.last_name)) {
         new_state = new_state.set('full_name', `${new_state.first_name} ${new_state.last_name}`);
       }
       return new_state;

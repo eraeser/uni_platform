@@ -1,9 +1,10 @@
+from django.core.exceptions import ObjectDoesNotExist
 from rest_framework import viewsets, mixins
 from rest_framework.decorators import action
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
 
-from .models import Comment
+from .models import Comment, CommentVotes
 from .serializers import CreateCommentSerializer, CommentSerializer
 
 
@@ -30,17 +31,26 @@ class CommentViewSet(mixins.RetrieveModelMixin,
             url_path='vote', url_name='vote')
     def vote(self, request, pk=None):
         comment = self.get_object()
-        user = request.user.id
         vote_action = request.data['action']
 
-        comment.votes.delete(user)
+        try:
+            vote = CommentVotes.objects.filter(user=request.user, comment=comment).get()
+            vote.delete()
+            if vote_action == 'upvote' and not vote.vote_action:
+                v = CommentVotes(user=request.user, comment=comment, vote_action=True)
+                v.save()
+            elif vote_action == 'downvote' and vote.vote_action:
+                v = CommentVotes(user=request.user, comment=comment, vote_action=False)
+                v.save()
+        except ObjectDoesNotExist:
+            if vote_action == 'upvote':
+                v = CommentVotes(user=request.user, comment=comment, vote_action=True)
+                v.save()
+            elif vote_action == 'downvote':
+                v = CommentVotes(user=request.user, comment=comment, vote_action=False)
+                v.save()
 
-        if vote_action == 'upvote':
-            comment.votes.up(user)
-        elif vote_action == 'downvote':
-            comment.votes.down(user)
-
-        return Response('Comment' + str(vote_action))
+        return Response(comment.commentvotes_set.filter(vote_action=True).count() - comment.commentvotes_set.filter(vote_action=False).count())
 
     def get_serializer_class(self):
         if self.action == 'create':

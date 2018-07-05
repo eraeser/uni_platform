@@ -11,7 +11,7 @@ import { connect } from "react-redux";
 
 
 import { logInUserAsync } from '../business/user';
-import { updateTokenThunk, setUserThunk } from '../state/actions/users';
+import { updateTokenThunk, setUserThunk, resetUserThunk } from '../state/actions/users';
 
 export class AuthScreen extends React.Component {
 
@@ -27,7 +27,8 @@ export class AuthScreen extends React.Component {
   fetchUser = async () => {
     this.setState({isFetching: true});
     const {token, user} = await logInUserAsync({username: this.state.username, password: this.state.password});
-    token && this.props.dispatch(updateTokenThunk(token))
+    token && this.props.dispatch(resetUserThunk())
+    .then(this.props.dispatch(updateTokenThunk(token)))
     .then(() => this.props.dispatch(setUserThunk(user)));
     !token && this.setState({isFetching: false})
   }

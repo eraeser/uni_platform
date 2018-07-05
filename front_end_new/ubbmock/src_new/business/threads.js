@@ -30,6 +30,41 @@ async function deleteThreadAsync(thread_id, token) {
   }
 }
 
+async function voteThreadAsync(data, token) {
+  try {
+
+    const {
+      action,
+      thread_id,
+    } = data;
+
+    let response = await fetch(
+      `${HOST}:${PORT}/${API}/threads/${thread_id}/vote/`, {
+        method: 'PATCH',
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'application/json',
+          'Access-Control-Allow-Origin': 'true',
+          'Access-Control-Allow-Credentials': 'true',
+          'Authorization': `${AUTH_PREFIX} ${token}`,
+        },
+        body: JSON.stringify({
+          action,
+        }),
+      }
+    );
+    console.log(response);
+    if(response.ok){
+      let responseJson = await response.json();
+      return responseJson;
+    }
+    throw new Error('Network response was not ok.');
+  } catch (error) {
+    ToastAndroid.show(error.toString(), ToastAndroid.LONG);
+    // console.error(error);
+  }
+}
+
 async function updateThreadAsync(data, token) {
   try {
 
@@ -197,4 +232,5 @@ export {
   deleteThreadAsync,
   getThreadAsync,
   getDashboardAsync,
+  voteThreadAsync,
 }

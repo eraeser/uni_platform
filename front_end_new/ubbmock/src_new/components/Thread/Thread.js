@@ -8,12 +8,14 @@ import {
   Button,
 } from 'react-native';
 
+import { connect } from 'react-redux';
+
 import { CommentList } from '../Comment';
 import { Page, ButtonRow } from './components';
 import Controls from '../utils/Controls';
 import MainHeader from '../utils/MainHeader';
 
-import { deleteThreadAsync } from '../../business/threads';
+import { deleteThreadAsync, voteThreadAsync } from '../../business/threads';
 
 const sections = (renderContent, renderComments) => ([
   {title: 'main', data: ['content'], key: 'main_section', renderItem: renderContent},
@@ -24,16 +26,14 @@ class Thread extends React.Component {
   constructor(props) {
     super(props);
     const thread = props.navigation.getParam('thread', 'NO-ITEM');
-    const user = props.navigation.getParam('user', 'no-item');
     this.state = {
       showButtons: false,
       thread,
-      user,
     }
   }
 
   onDelete = () => {
-    deleteThreadAsync(this.state.thread.id, this.state.user.auth_token);
+    deleteThreadAsync(this.state.thread.id, this.props.user.auth_token);
     this.props.navigation.goBack();
   }
 
@@ -69,12 +69,18 @@ class Thread extends React.Component {
 
   onComments = () => {
     // console.log('go to comments');
-    console.log(this._comms);
     this._sectionList.scrollToLocation({
       itemIndex: 0,
       sectionIndex: 1,
       viewPosition: 0,
     })
+  }
+
+  onVote = () => (action) => async () => {
+    const nbs = await voteThreadAsync({action, thread_id: this.state.thread.id}, this.props.user.auth_token)
+    const thread = this.state.thread;
+    thread.vote_score = nbs
+    this.setState(thread)
   }
 
   computeShowButtons = (commentsVisible, headerVisible, commentsWereVisible) => {
@@ -117,7 +123,7 @@ class Thread extends React.Component {
 
   renderSectionHeader = ({section: {title}}) => {
     return (
-      title === 'buttons' ? <ButtonRow show onComments={this.onComments} /> : null
+      title === 'buttons' ? <ButtonRow show votes={this.state.thread.vote_score} onVote={this.onVote()} onComments={this.onComments} /> : null
     );
   }
 
@@ -125,8 +131,8 @@ class Thread extends React.Component {
     return (
       <View style={{height: '100%'}}>
         <MainHeader>
-          <Controls onDelete={this.onDelete} onEdit={this.onEdit} >
-            <Text>{this.state.thread.name}</Text>
+          <Controls onDelete={this.onDelete} onEdit={this.onEdit} enable={this.props.user.id === this.state.thread.author}>
+            <Text style={{textAlign: 'center'}} numberOfLines={2} ellipsizeMode='tail'>{this.state.thread.name}</Text>
           </Controls>
         </MainHeader>
         <SectionList
@@ -141,7 +147,12 @@ class Thread extends React.Component {
           ref={(c) => {this._sectionList = c}}
         />
         <View>
-          <ButtonRow show={this.state.showButtons} onComments={this.onComments} />
+          <ButtonRow
+            show={this.state.showButtons}
+            votes={this.state.thread.vote_score}
+            onComments={this.onComments}
+            onVote={this.onVote()}
+          />
           <Button onPress={() => this.props.navigation.navigate('CreateComment', {'thread': this.state.thread})} title="Comment" />
         </View>
       </View>
@@ -149,4 +160,8 @@ class Thread extends React.Component {
   }
 }
 
-export default Thread;
+const mapStateToProps = (state) => ({
+  user: state.users,
+})
+
+export default connect(mapStateToProps)(Thread);

@@ -1,11 +1,12 @@
 import React from 'react';
 import {
   View,
-  Button,
   Text,
   TouchableOpacity,
   StyleSheet,
 } from 'react-native';
+
+import FontAwesome from 'react-native-vector-icons/FontAwesome';
 
 const styles = StyleSheet.create({
   container: {
@@ -40,7 +41,10 @@ const CustomButton = (props) => {
   return (
     <View style={props.style || styles.buttonContainer}>
       <TouchableOpacity style={styles.button} onPress={props.onPress}>
-        <Text style={styles.text}>{props.title}</Text>
+        {props.title && props.icon
+          ? <FontAwesome name={props.icon} size={18} color="#3467f8" />
+          : <Text style={styles.text}>{props.title}</Text>
+        }
       </TouchableOpacity>
     </View>
   );
@@ -54,8 +58,11 @@ const ButtonRow = (props) => {
   return(
     <View style={[styles.container, show]}>
       <View style={styles.buttonGroup}>
-        <CustomButton onPress={() => console.log('upvote')} title="Up" />
-        <CustomButton onPress={() => console.log('downvote')} title="Down" />
+        <CustomButton onPress={props.onVote('upvote')} title="Up" icon="arrow-up" />
+        <View style={styles.button} >
+          <Text style={styles.text}>{props.votes}</Text>
+        </View>
+        <CustomButton onPress={props.onVote('downvote')} title="Down" icon="arrow-down" />
       </View>
       <CustomButton onPress={props.onComments} title="Comments" />
       <CustomButton onPress={() => console.log('share')} title="Share" />

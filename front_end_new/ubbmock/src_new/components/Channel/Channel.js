@@ -6,8 +6,11 @@ import {
   TouchableOpacity,
 } from 'react-native';
 
+import { connect } from "react-redux";
+
 import { ThreadList } from '../Thread';
 import MainHeader from '../utils/MainHeader';
+import Controls from '../utils/Controls';
 
 const styles = StyleSheet.create({
   fab: {
@@ -32,21 +35,43 @@ const styles = StyleSheet.create({
 });
 
 class Channel extends React.Component {
+  constructor(props) {
+    super(props)
+    const channel = this.props.navigation.getParam('item', 'NO-ID');
+    this.state = {
+      channel,
+    }
+  }
+
+  onEdit = () => {
+    this.props.navigation.navigate(
+      'EditChannel', { channel: this.state.channel },
+    );
+  }
+
   render() {
-    const itemChannel = this.props.navigation.getParam('item', 'NO-ID');
 
     return(
       <View style={{height: '100%'}}>
-        <MainHeader><Text>{itemChannel.name}</Text></MainHeader>
-        <ThreadList navigation={this.props.navigation} channel_id={itemChannel.id} />
-        <View style={styles.fab}>
-          <TouchableOpacity onPress={() => this.props.navigation.navigate('CreateThread', {'channel': itemChannel})}>
-            <Text style={styles.text}>Post</Text>
-          </TouchableOpacity>
-        </View>
+        <MainHeader>
+          <Controls image={this.state.channel.icon} onEdit={this.onEdit} enable={this.props.user.is_admin}>
+            <Text numberOfLines={2} ellipsizeMode='tail' style={{textAlign: 'center'}}>{this.state.channel.name}</Text>
+          </Controls>
+        </MainHeader>
+        <ThreadList navigation={this.props.navigation} channel_id={this.state.channel.id} />
+        {this.props.user.is_admin ?
+          <View style={styles.fab}>
+            <TouchableOpacity onPress={() => this.props.navigation.navigate('CreateThread', {'channel': this.state.channel})}>
+              <Text style={styles.text}>Post</Text>
+            </TouchableOpacity>
+          </View> : null }
       </View>
     );
   }
 }
 
-export default Channel;
+const mapStateToProps = (state) => ({
+  user: state.users,
+})
+
+export default connect(mapStateToProps)(Channel);

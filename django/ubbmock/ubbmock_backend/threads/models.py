@@ -29,3 +29,6 @@ class ThreadVotes(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     thread = models.ForeignKey(Thread, on_delete=models.CASCADE)
     vote_action = models.BooleanField(default=False)
+
+    class Meta:
+        unique_together = (('user', 'thread'),)

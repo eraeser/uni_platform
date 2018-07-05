@@ -15,7 +15,7 @@ class SettingsScreen extends React.Component {
   }
 
   _onClearCache = async () => {
-    await LocalStorage.clearAllAsync();
+    await LocalStorage.clearAllAsync().then(() => LocalStorage.checkKeyConsistency());
     this.props.dispatch(resetUser());
   }
 

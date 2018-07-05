@@ -8,11 +8,17 @@ import {
 
 const ChannelItem = (props) => {
   return (
-    <TouchableOpacity onPress={() => props.onPressItem(props.item)}>
+    <TouchableOpacity onPress={() => {
+        props.onPressItem(props.item);
+        console.log(props.item);
+      }}
+    >
       <View style={{flexDirection: 'row' }}>
         <Image
           style={{width: 50, height: 50, borderRadius: 50}}
-          source={{uri: 'https://facebook.github.io/react-native/docs/assets/favicon.png'}}
+          source={
+            {uri: props.item.icon || 'https://facebook.github.io/react-native/docs/assets/favicon.png'}
+          }
         />
         <View style={{marginLeft: 10}}>
           <Text>

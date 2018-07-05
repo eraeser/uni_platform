@@ -8,6 +8,7 @@ import ChannelListScreen from './ChannelListScreen';
 import SettingsScreen from './SettingsScreen';
 import Thread, { CreateThread } from '../components/Thread';
 import Comment, { CreateComment } from '../components/Comment';
+import { EditChannel } from '../components/Channel';
 
 const TabNavigator = createBottomTabNavigator({
   Home: HomeScreen,
@@ -46,6 +47,9 @@ const StackNavigator = createStackNavigator({
   },
   Comment: {
     screen: Comment,
+  },
+  EditChannel: {
+    screen: EditChannel,
   },
   CreateComment: {
     screen: CreateComment,
